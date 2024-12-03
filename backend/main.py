@@ -1,15 +1,29 @@
 from fastapi import FastAPI, Request
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
+from dotenv import load_dotenv
+import os
 import requests
 
+# Load environment variables
+load_dotenv()
+
 app = FastAPI()
+
+# Spoonacular API key from .env file
+SPOONACULAR_API_KEY = os.getenv("SPOONACULAR_API_KEY")
+
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to the Conversational Recipe Innovation Bot API. Use /generate_recipe/ to get started."}
+
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    return FileResponse("favicon.ico")
 
 class RecipeRequest(BaseModel):
     ingredients: list
     preferences: dict
-
-# Replace with your actual Spoonacular API key
-SPOONACULAR_API_KEY = "6bc071b43c9a4095addce64b7bce951f"
 
 @app.post("/generate_recipe/")
 async def generate_recipe(request: RecipeRequest):

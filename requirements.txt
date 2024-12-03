@@ -4,3 +4,4 @@ requests
 pydantic
 streamlit
 requests
+python-dotenv
